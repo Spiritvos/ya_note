@@ -22,7 +22,7 @@ class TestNoteCreation(TestCase):
         cls.form_data = {
             'title': 'Тестовый заголовок',
             'text':'Кокой-то текст',
-            'slug': 'Test',
+            'slug': '',
             'author': cls.user
         }
 
@@ -30,15 +30,8 @@ class TestNoteCreation(TestCase):
     # Если при создании заметки не заполнен slug, то он формируется 
     # автоматически, с помощью функции pytils.translit.slugify.
     def test_slug_empty_field(self):
-        title_for_note = 'Новый тестовый заголовок'
-        prepare_slug = slugify(title_for_note)[:100]
-        slug_empty_field = {
-            'title': title_for_note,
-            'text': 'Новый текст',
-            'slug': '',
-            'author': self.user
-        }
-        self.auth_client.post(self.url, data=slug_empty_field)
+        prepare_slug = slugify(self.form_data['title'])[:100]
+        self.auth_client.post(self.url, data=self.form_data)
         name_slug_note = Note.objects.first().slug
         self.assertEqual(name_slug_note, prepare_slug)
 
