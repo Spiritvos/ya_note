@@ -94,7 +94,7 @@ class TestRoutes(TestCase):
             ('notes:success', None),
             ('notes:add', None),
             ('notes:detail', (self.note.slug,)),
-            ('notes:delete', (self.note.slug,)),
+            ('notes:edit', (self.note.slug,)),
             ('notes:delete', (self.note.slug,)),
         )
         for url_name, args in urls:
