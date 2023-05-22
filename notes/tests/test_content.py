@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import reverse
 from django.test import TestCase
 
+from notes.forms import NoteForm
 from notes.models import Note
 
 
@@ -10,7 +11,7 @@ User = get_user_model()
 
 class TestContent(TestCase):
     LIST_URL = reverse('notes:list')
-    
+
     @classmethod
     def setUpTestData(cls):
         cls.author = User.objects.create(username='Норм чел')
@@ -28,8 +29,7 @@ class TestContent(TestCase):
             author=cls.reader
         )
 
-
-    # В список заметок одного пользователя не попадают 
+    # В список заметок одного пользователя не попадают
     # заметки другого пользователя
     def test_autor_list_note(self):
         self.client.force_login(self.author)
@@ -38,8 +38,7 @@ class TestContent(TestCase):
         single_note = Note.objects.all().filter(author=self.reader)[0]
         self.assertNotIn(single_note, object_list)
 
-
-    # Отдельная заметка передаётся на страницу со списком заметок в 
+    # Отдельная заметка передаётся на страницу со списком заметок в
     # списке object_list в словаре context.
     def test_unique_note(self):
         self.client.force_login(self.author)
@@ -47,7 +46,6 @@ class TestContent(TestCase):
         object_list = response.context['object_list']
         single_note = Note.objects.all().filter(author=self.author)[0]
         self.assertIn(single_note, object_list)
-
 
     # На страницы создания и редактирования заметки передаются формы.
     def test_access_client_form(self):
@@ -61,3 +59,4 @@ class TestContent(TestCase):
                 url = reverse(url_name, args=args)
                 response = self.client.get(url)
                 self.assertIn('form', response.context)
+                self.assertIsInstance(response.context['form'], NoteForm)

@@ -1,5 +1,4 @@
 from http import HTTPStatus
-  
 
 from django.contrib.auth import get_user_model
 from django.shortcuts import reverse
@@ -12,7 +11,7 @@ User = get_user_model()
 
 
 class TestRoutes(TestCase):
-    
+
     @classmethod
     def setUpTestData(cls):
         cls.author = User.objects.create(username='Норм чел')
@@ -23,7 +22,6 @@ class TestRoutes(TestCase):
             slug='Test',
             author=cls.author
         )
-
 
     # Главная страница доступна анонимному пользователю.
     # Страницы регистрации пользователей, входа в учётную запись
@@ -41,9 +39,8 @@ class TestRoutes(TestCase):
                 response = self.client.get(url)
                 self.assertEqual(response.status_code, HTTPStatus.OK)
 
-
-    # Аутентифицированному пользователю доступна страница со 
-    # списком заметок _notes/,_ страница успешного добавления заметки 
+    # Аутентифицированному пользователю доступна страница со
+    # списком заметок _notes/,_ страница успешного добавления заметки
     # _done/_, страница добавления новой заметки _add/._
     def test_availability_for_add_delete_note(self):
         urls = (
@@ -57,10 +54,9 @@ class TestRoutes(TestCase):
                 url = reverse(url_name)
                 response = self.client.get(url)
                 self.assertEqual(response.status_code, HTTPStatus.OK)
-    
-    
-    # Страницы отдельной заметки, удаления и редактирования заметки доступны 
-    # только автору заметки. Если на эти страницы попытается 
+
+    # Страницы отдельной заметки, удаления и редактирования заметки доступны
+    # только автору заметки. Если на эти страницы попытается
     # зайти другой пользователь — вернётся ошибка 404.
     def test_availability_edit_and_delete_note(self):
         user_statuses = (
@@ -80,10 +76,9 @@ class TestRoutes(TestCase):
                     response = self.client.get(url)
                     self.assertEqual(response.status_code, status)
 
-
-    # При попытке перейти на страницу списка заметок, страницу успешного 
-    # добавления записи, страницу добавления заметки, отдельной заметки, 
-    # редактирования или удаления заметки анонимный пользователь 
+    # При попытке перейти на страницу списка заметок, страницу успешного
+    # добавления записи, страницу добавления заметки, отдельной заметки,
+    # редактирования или удаления заметки анонимный пользователь
     # перенаправляется на страницу логина.
     def test_redirect_for_anonymous_client(self):
         login_url = reverse(
